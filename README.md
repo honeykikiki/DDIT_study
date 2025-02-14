@@ -7,8 +7,8 @@
 <a href="https://www.notion.so/honey-kikiki/Spring-boot-React-199f122224bf80b3bf1cd4516f310b48" target="_blank">요구사항 보러가기~</a>
 
 ```
-  // npm 패키지 실행
+  // npm 패키지 실행 (필요한 패키지 다운로드)
   npm run p1_install
-  // fe프로젝트 실행
+  // fe프로젝트 실행 (프로젝트 실행)
   npm run dev
 ```
