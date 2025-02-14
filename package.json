@@ -1,0 +1,22 @@
+{
+  "name": "ddit_study",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "p1_install": "cd React_SpringBoot/fe && npm install",
+    "dev": "cd React_SpringBoot/fe && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/honeykikiki/DDIT_study.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/honeykikiki/DDIT_study/issues"
+  },
+  "homepage": "https://github.com/honeykikiki/DDIT_study#readme",
+  "description": ""
+}
