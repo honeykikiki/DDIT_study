@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Board from "./Board";
 
 const BoardList = () => {
@@ -28,6 +28,10 @@ const BoardList = () => {
     formData.append("content", formRef.current.content.value);
     formData.append("writer", formRef.current.writer.value);
 
+    Object.values(formRef.current.files.files).forEach((file) => {
+      formData.append("files", file);
+    });
+
     fetch("http://localhost:8080/board/insert", {
       method: "POST",
       body: formData,
@@ -54,6 +58,7 @@ const BoardList = () => {
         title <input id="title" name="title" type="text" /> <br />
         content <input id="content" name="content" type="text" /> <br />
         writer <input id="writer" name="writer" type="text" /> <br />
+        file <input id="files" name="files" type="file" multiple /> <br />
         <button onClick={handleInsert}>추가</button>
       </form>
 

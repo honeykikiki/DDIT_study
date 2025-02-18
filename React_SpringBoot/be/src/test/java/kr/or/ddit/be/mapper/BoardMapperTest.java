@@ -17,7 +17,7 @@ class BoardMapperTest {
     @Autowired
     private BoardMapper boardMapper;
 
-    private Long testBoardId; // 테스트용 게시물 ID
+    private int testBoardId; // 테스트용 게시물 ID
 
     @BeforeEach
     void setUp() {

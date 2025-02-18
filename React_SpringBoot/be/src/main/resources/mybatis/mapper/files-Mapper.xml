@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.be.mapper.FilesMapper">
+    <select id="list" parameterType="fileVO" resultType="fileVO">
+        SELECT *
+        FROM FILES
+        <where>
+            <if test="boardId != null and boardId == 0">
+                WHERE BOARD_ID = #{boardId}
+            </if>
+        </where>
+
+    </select>
+
+    <insert id="insertList" parameterType="fileVO">
+<!--        INSERT ALL-->
+<!--        <foreach collection="fileVOList" item="file">-->
+<!--            INTO  FILES (FILE_NAME, CONTENT, BOARD_ID)-->
+<!--            values (#{file.fileName}, #{file.content}, #{file.boardId})-->
+<!--        </foreach>-->
+<!--        SELECT 1 FROM DUAL-->
+    </insert>
+
+    <insert id="insert" parameterType="fileVO">
+        <selectKey resultType="int" order="AFTER" keyProperty="fileId">
+            SELECT MAX(FILE_ID) FROM FILES
+        </selectKey>
+
+        INSERT INTO FILES (FILE_NAME, CONTENT, BOARD_ID)
+        values (#{fileName}, #{content}, #{boardId})
+    </insert>
+</mapper>

@@ -3,7 +3,6 @@ package kr.or.ddit.be.controller;
 import kr.or.ddit.be.service.BoardService;
 import kr.or.ddit.be.vo.BoardVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -15,12 +14,15 @@ import java.util.Map;
 @RequestMapping("/board")
 @CrossOrigin("*")
 public class BoardController {
-    @Autowired
-    BoardService boardService;
+    private final BoardService boardService;
+
+    public BoardController(BoardService boardService) {
+        this.boardService = boardService;
+    }
 
     @GetMapping("/list")
     public Map<String, Object> list() {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
         List<BoardVO> list = boardService.list();
         resultMap.put("list", list);
         return resultMap;
@@ -29,8 +31,10 @@ public class BoardController {
     @PostMapping("/insert")
     public Map<String, Object> insert(BoardVO boardVO) {
         log.debug("boardVO: {}", boardVO);
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
         int result = boardService.insert(boardVO);
+
+        boardVO.setFiles(null); // MultipartFile 내보내는 경우 JSON변경이 불가능해서 에러가 생김
         resultMap.put("item", boardVO);
         resultMap.put("code", result);
         log.debug("boardVO: {}", boardVO);
@@ -40,7 +44,7 @@ public class BoardController {
     @PostMapping("/update")
     public Map<String, Object> update(BoardVO boardVO) {
         log.debug("boardVO: {}", boardVO);
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
         int result = boardService.update(boardVO);
         resultMap.put("item", boardVO);
         resultMap.put("code", result);
@@ -51,7 +55,7 @@ public class BoardController {
     @PostMapping("/delete")
     public Map<String, Object> delete(@RequestBody BoardVO boardVO) {
         log.debug("boardVO: {}", boardVO);
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
         int delete = boardService.delete(boardVO.getBoardId());
         resultMap.put("code", delete);
 

@@ -8,10 +8,10 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     public List<BoardVO> list();
-    public BoardVO findById(Long id);
+    public BoardVO findById(int id);
 
     public int insert(BoardVO boardVO);
     public int update(BoardVO boardVO);
-    public int delete(Long boardId);
+    public int delete(int boardId);
 
 }
