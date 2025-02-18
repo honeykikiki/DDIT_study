@@ -1,9 +1,9 @@
-import Board from "./board/Board";
+import BoardList from "./board/BoardList";
 
 function App() {
   return (
     <>
-      <Board />
+      <BoardList />
     </>
   );
 }

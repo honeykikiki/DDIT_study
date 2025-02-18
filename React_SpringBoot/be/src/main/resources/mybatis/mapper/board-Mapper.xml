@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.be.mapper.BoardMapper">
+    <select id="list" resultType="BoardVO">
+        SELECT BOARD_ID, TITLE, CONTENT, WRITER, CREATE_DATE
+        FROM BOARD
+        ORDER BY CREATE_DATE DESC
+    </select>
+
+    <select id="findById" resultType="BoardVO">
+        SELECT BOARD_ID, TITLE, CONTENT, WRITER, CREATE_DATE
+        FROM BOARD
+        where BOARD_ID = #{boardId}
+    </select>
+
+    <insert id="insert" parameterType="BoardVO">
+        -- id, 날짜를 바로 추가해주기 위해 (이렇게 하면 VO에 값이 세팅 된다)
+        <selectKey resultType="BoardVO" order="AFTER" keyProperty="boardId,createDate">
+            select max(board_id) as boardId, SYSDATE as createDate from board
+        </selectKey>
+
+        INSERT INTO BOARD (TITLE, CONTENT, WRITER)
+        VALUES(#{title}, #{content}, #{writer})
+
+    </insert>
+
+    <update id="update" parameterType="BoardVO">
+        UPDATE BOARD
+        SET TITLE = #{title},
+            CONTENT = #{content},
+            WRITER = #{writer}
+        WHERE BOARD_ID = #{boardId}
+
+    </update>
+
+    <delete id="delete">
+        DELETE BOARD
+        WHERE BOARD_ID = #{boardId}
+    </delete>
+</mapper>
