@@ -58,6 +58,8 @@ const Board = ({ board, refresh }) => {
       });
   };
 
+  console.log(curBoard.fileVOList);
+
   return (
     <tr key={curBoard.boardId}>
       <td>
@@ -88,6 +90,15 @@ const Board = ({ board, refresh }) => {
         {isUpdate ? <button onClick={handleUpdate}>변경</button> : null}
       </td>
 
+      <td>
+        {curBoard.fileVOList?.length > 0
+          ? curBoard.fileVOList.map((file) => (
+              <div key={file.fileId}>
+                <img src={`http://localhost:8080/ys${file.fileName}`} width={50} height={50} alt="" />
+              </div>
+            ))
+          : "이미지 없음"}
+      </td>
       <td>
         <button onClick={handleDelete}>삭제</button>
       </td>

@@ -24,7 +24,14 @@ public class BoardService {
     FilesMapper filesMapper;
 
     public List<BoardVO> list() {
-        return boardMapper.list();
+        List<BoardVO> list = boardMapper.list();
+        for (BoardVO boardVO : list) {
+            System.out.println(boardVO.getBoardId());
+            List<FileVO> fileVOList = filesMapper.list(boardVO);
+            boardVO.setFileVOList(fileVOList);
+        }
+
+        return list;
     }
 
 
@@ -35,11 +42,11 @@ public class BoardService {
 
     public int insert(BoardVO boardVO) {
         int result = boardMapper.insert(boardVO);
+        MultipartFile[] bdFiles = boardVO.getFiles();
 
-        if (result == 1) {
+        if (result == 1 && bdFiles != null && bdFiles.length > 0) {
             // 파일 추가하기
-            MultipartFile[] bdFiles = boardVO.getFiles();
-            FileVO[] fileList = Arrays.stream(bdFiles).map(boardVO1 -> {
+            List<FileVO> fileList = Arrays.stream(bdFiles).map(boardVO1 -> {
                 String saveDir = "/Users/heoseongjin/Documents/GitHub/ddit/ys/board/";
                 String saveName = UUID.randomUUID().toString().replace("-", "");
                 File file = new File(saveDir + saveName);
@@ -58,7 +65,7 @@ public class BoardService {
                 fileVO.setBoardId(boardVO.getBoardId());
                 filesMapper.insert(fileVO);
                 return fileVO;
-            }).toArray(FileVO[]::new);
+            }).toList();
 
             boardVO.setFileVOList(fileList);
         }
