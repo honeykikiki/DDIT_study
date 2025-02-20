@@ -29,4 +29,14 @@
         INSERT INTO FILES (FILE_NAME, CONTENT, BOARD_ID)
         values (#{fileName}, #{content}, #{boardId})
     </insert>
+
+    <delete id="delete" parameterType="arraylist">
+        DELETE FILES
+        WHERE FILE_ID
+        IN (
+            <foreach collection="list" item="fileId" separator=",">
+              #{fileId}
+            </foreach>
+           )
+    </delete>
 </mapper>

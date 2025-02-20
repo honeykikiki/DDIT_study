@@ -13,4 +13,6 @@ public interface FilesMapper {
     public int insertList(FileVO[] fileVOList);
 
     public int insert(FileVO fileVO);
+
+    void delete(List<Integer> fileIdList);
 }

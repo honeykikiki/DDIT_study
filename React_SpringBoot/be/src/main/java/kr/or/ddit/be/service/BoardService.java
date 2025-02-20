@@ -6,10 +6,15 @@ import kr.or.ddit.be.vo.BoardVO;
 import kr.or.ddit.be.vo.FileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -34,11 +39,9 @@ public class BoardService {
         return list;
     }
 
-
     public BoardVO findById(int id) {
         return boardMapper.findById(id);
     }
-
 
     public int insert(BoardVO boardVO) {
         int result = boardMapper.insert(boardVO);
@@ -73,13 +76,33 @@ public class BoardService {
         return result;
     }
 
-
     public int update(BoardVO boardVO) {
         return boardMapper.update(boardVO);
     }
 
-
+    @Transactional
     public int delete(int boardId) {
+        int result = 0;
+        BoardVO  boardVO = new BoardVO();
+        boardVO.setBoardId(boardId);
+        List<FileVO> fileVOList = filesMapper.list(boardVO);
+        List<Integer> fileIdList = new ArrayList<>();
+
+        fileVOList.stream().forEach((fileVO) -> {
+            // 이미지 먼저 삭제하기
+            Path filePath = Paths.get("/Users/heoseongjin/Documents/GitHub/ddit/ys" + fileVO.getFileName());
+            try {
+                Files.deleteIfExists(filePath);
+                fileIdList.add(fileVO.getFileId());
+            } catch (IOException e) {
+                System.out.println("파일 삭제 실패: " + e.getMessage());
+            }
+        });
+
+        if (!fileIdList.isEmpty()) {
+            filesMapper.delete(fileIdList);
+        }
+
         return boardMapper.delete(boardId);
     }
 }

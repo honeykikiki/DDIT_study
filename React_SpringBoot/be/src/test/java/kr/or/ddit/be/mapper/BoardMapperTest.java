@@ -34,7 +34,7 @@ class BoardMapperTest {
     @AfterEach
     void tearDown() {
         // 테스트 후 남은 게시물 정리
-        if (testBoardId != null) {
+        if (testBoardId != 0) {
             boardMapper.delete(testBoardId);
         }
     }
