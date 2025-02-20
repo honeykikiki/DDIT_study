@@ -1,65 +1,54 @@
 import { useEffect, useRef, useState } from "react";
 import Board from "./Board";
+import Input from "../components/Input";
+import Button from "../components/Button";
+import { boardInsert } from "../remote/board";
 
 const BoardList = () => {
   const formRef = useRef(null);
   const [boardList, setBoardList] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/board/list")
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        // console.log(data);
-        setBoardList(data.list);
-      });
+    fetchBoardList();
   }, []);
 
+  const fetchBoardList = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/board/list");
+      const data = await response.json();
+      console.log(data.list);
+
+      setBoardList(data.list);
+    } catch (error) {
+      console.error("Failed to fetch board list:", error);
+    }
+  };
+
   // 게시물 추가
-  const handleInsert = (e) => {
+  const handleInsert = async (e) => {
     e.preventDefault();
 
     // 폼이 없는경우 에러처리
     if (formRef === null) return;
 
-    const formData = new FormData();
-    formData.append("title", formRef.current.title.value);
-    formData.append("content", formRef.current.content.value);
-    formData.append("writer", formRef.current.writer.value);
-
-    Object.values(formRef.current.files.files).forEach((file) => {
-      formData.append("files", file);
-    });
-
-    fetch("http://localhost:8080/board/insert", {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.code === 1) {
-          setBoardList((prevBoard) => [data.item, ...prevBoard]);
-          formRef.current.title.value = "";
-          formRef.current.content.value = "";
-          formRef.current.writer.value = "";
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    const data = await boardInsert(formRef);
+    if (data !== null && data.code === 1) {
+      setBoardList((prevBoard) => [data.item, ...prevBoard]);
+      formRef.current.title.value = "";
+      formRef.current.content.value = "";
+      formRef.current.writer.value = "";
+    }
   };
 
   return (
     <>
       <div>Board</div>
       <form ref={formRef}>
-        title <input id="title" name="title" type="text" /> <br />
-        content <input id="content" name="content" type="text" /> <br />
-        writer <input id="writer" name="writer" type="text" /> <br />
+        title <Input dataName="title" /> <br />
+        content <Input dataName="content" /> <br />
+        writer <Input dataName="writer" /> <br />
         file <input id="files" name="files" type="file" multiple /> <br />
-        <button onClick={handleInsert}>추가</button>
+        <Button title={"추가"} onClick={handleInsert} />
       </form>
 
       <table border={1}>

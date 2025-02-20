@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { boardDelete, boardUpdate as boardUpdate } from "../remote/board";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 // eslint-disable-next-line react/prop-types
 const Board = ({ board, refresh }) => {
@@ -8,7 +11,6 @@ const Board = ({ board, refresh }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setCurBoard({ ...curBoard, [name]: value });
   };
 
@@ -18,76 +20,53 @@ const Board = ({ board, refresh }) => {
     setCurBoard(board);
   };
 
-  const handleUpdate = () => {
-    const formData = new FormData();
-    formData.append("boardId", curBoard.boardId);
-    formData.append("title", curBoard.title);
-    formData.append("content", curBoard.content);
-    formData.append("writer", curBoard.writer);
-
-    fetch("http://localhost:8080/board/update", {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.code === 1) {
-          setIsUpdate(!isUpdate);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const handleUpdate = async () => {
+    const data = await boardUpdate(curBoard);
+    // 데이터 처리 에러가 혹은 수정 안된 경우
+    if (data != null && data.code == 1) {
+      setIsUpdate(!isUpdate);
+    }
   };
 
-  const handleDelete = () => {
-    fetch("http://localhost:8080/board/delete", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ boardId: curBoard.boardId }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.code === 1) {
-          console.log(1);
-
-          refresh((prevData) => prevData.filter(({ boardId }) => boardId !== curBoard.boardId));
-        }
-      });
+  const handleDelete = async () => {
+    const data = await boardDelete(curBoard.boardId);
+    // 데이터 처리 에러가 혹은 삭제 안된 경우
+    if (data != null && data.code === 1) {
+      refresh((prevData) => prevData.filter(({ boardId }) => boardId !== curBoard.boardId));
+    }
   };
-
-  console.log(curBoard.fileVOList);
 
   return (
     <tr key={curBoard.boardId}>
       <td>
         {isUpdate ? (
-          <input id="title" name="title" type="text" onChange={handleChange} value={curBoard.title} />
+          // <input id="title" name="title" type="text" onChange={handleChange} value={curBoard.title} />
+          <Input dataName="title" onChange={handleChange} value={curBoard.title} />
         ) : (
           curBoard.title
         )}
       </td>
       <td>
         {isUpdate ? (
-          <input id="content" name="content" type="text" onChange={handleChange} value={curBoard.content} />
+          // <input id="content" name="content" type="text" onChange={handleChange} value={curBoard.content} />
+          <Input dataName="content" onChange={handleChange} value={curBoard.content} />
         ) : (
           curBoard.content
         )}
       </td>
       <td>
         {isUpdate ? (
-          <input id="writer" name="writer" type="text" onChange={handleChange} value={curBoard.writer} />
+          // <input dataName="writer" type="text" onChange={handleChange} value={curBoard.writer} />
+          <Input dataName="writer" onChange={handleChange} value={curBoard.writer} />
         ) : (
           curBoard.writer
         )}
       </td>
       <td>{date.toLocaleDateString()}</td>
       <td>
-        <button onClick={handleIsUpdate}>{isUpdate ? "수정취소" : "수정"}</button>
+        <Button title={isUpdate ? "수정취소" : "수정"} onClick={handleIsUpdate} />
         {/* api 통한 변경 */}
-        {isUpdate ? <button onClick={handleUpdate}>변경</button> : null}
+        {isUpdate ? <Button title="변경" onClick={handleUpdate} /> : null}
       </td>
 
       <td>
@@ -100,7 +79,7 @@ const Board = ({ board, refresh }) => {
           : "이미지 없음"}
       </td>
       <td>
-        <button onClick={handleDelete}>삭제</button>
+        <Button title="삭제" onClick={handleDelete} />
       </td>
     </tr>
   );
