@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.be.mapper.BoardMapper">
-    <select id="list" resultType="BoardVO">
+    <select id="getTotalCount" resultType="int" parameterType="paginationVO">
+        SELECT COUNT(*) AS TOTAL_COUNT FROM BOARD
+        <where>
+            <if test="searchVO.title != null and searchVO.title != ''">
+                TITLE LIKE '%' || #{searchVO.title} || '%'
+            </if>
+            <if test="searchVO.content != null and searchVO.content != ''">
+                CONTENT LIKE '%' || #{searchVO.content} || '%'
+            </if>
+            <if test="searchVO.writer != null and searchVO.writer != ''">
+                WRITER LIKE '%' || #{searchVO.writer} || '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultType="BoardVO" parameterType="paginationVO">
         SELECT BOARD_ID, TITLE, CONTENT, WRITER, CREATE_DATE
+
         FROM BOARD
+        <where>
+            <if test="searchVO.title != null and searchVO.title != ''">
+                TITLE LIKE '%' || #{searchVO.title} || '%'
+            </if>
+            <if test="searchVO.content != null and searchVO.content != ''">
+                CONTENT LIKE '%' || #{searchVO.content} || '%'
+            </if>
+            <if test="searchVO.writer != null and searchVO.writer != ''">
+                WRITER LIKE '%' || #{searchVO.writer} || '%'
+            </if>
+        </where>
         ORDER BY CREATE_DATE DESC
+        OFFSET (#{pageNo} - 1) * #{recordCountPerPage} ROWS FETCH FIRST #{recordCountPerPage} ROWS ONLY
     </select>
 
     <select id="findById" resultType="BoardVO">

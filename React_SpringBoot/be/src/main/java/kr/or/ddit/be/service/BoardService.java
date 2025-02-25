@@ -4,6 +4,7 @@ import kr.or.ddit.be.mapper.BoardMapper;
 import kr.or.ddit.be.mapper.FilesMapper;
 import kr.or.ddit.be.vo.BoardVO;
 import kr.or.ddit.be.vo.FileVO;
+import kr.or.ddit.be.vo.PaginationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-
 @Service
 public class BoardService {
     @Autowired
@@ -28,10 +28,23 @@ public class BoardService {
     @Autowired
     FilesMapper filesMapper;
 
-    public List<BoardVO> list() {
-        List<BoardVO> list = boardMapper.list();
+    public List<BoardVO> list(PaginationVO<BoardVO> searchBoardVO) {
+        List<BoardVO> list = boardMapper.list(searchBoardVO);
+
+        /*
+        * 모든 게시물 카운트
+        * 몇개씩 가져오는지
+        * 현재 페이지
+        * 전체 페이지 카운트
+        * 검색 정보
+        * */
+
+        // 페이지 전체 정보 가져오기
+        int totalCount = boardMapper.getTotalCount(searchBoardVO);
+        searchBoardVO.setTotalCount(totalCount);
+
+        // 파일 정보 가져오기
         for (BoardVO boardVO : list) {
-            System.out.println(boardVO.getBoardId());
             List<FileVO> fileVOList = filesMapper.list(boardVO);
             boardVO.setFileVOList(fileVOList);
         }
@@ -83,7 +96,7 @@ public class BoardService {
     @Transactional
     public int delete(int boardId) {
         int result = 0;
-        BoardVO  boardVO = new BoardVO();
+        BoardVO boardVO = new BoardVO();
         boardVO.setBoardId(boardId);
         List<FileVO> fileVOList = filesMapper.list(boardVO);
         List<Integer> fileIdList = new ArrayList<>();

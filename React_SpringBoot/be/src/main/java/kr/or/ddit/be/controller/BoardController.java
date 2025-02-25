@@ -2,6 +2,7 @@ package kr.or.ddit.be.controller;
 
 import kr.or.ddit.be.service.BoardService;
 import kr.or.ddit.be.vo.BoardVO;
+import kr.or.ddit.be.vo.PaginationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +22,14 @@ public class BoardController {
     }
 
     @GetMapping("/list")
-    public Map<String, Object> list() {
+    public Map<String, Object> list(PaginationVO<BoardVO> paginationVO,
+                                    BoardVO boardVO) {
         Map<String, Object> resultMap = new HashMap<>();
-        List<BoardVO> list = boardService.list();
+        paginationVO.setSearchVO(boardVO);
+
+        List<BoardVO> list = boardService.list(paginationVO);
         resultMap.put("list", list);
+        resultMap.put("pagination", paginationVO);
         return resultMap;
     }
 

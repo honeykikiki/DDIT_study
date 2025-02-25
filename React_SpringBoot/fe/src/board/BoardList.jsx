@@ -1,28 +1,43 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Board from "./Board";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { boardInsert } from "../remote/board";
+import { boardInsert, getBoardList } from "../remote/board";
+import usePagination from "../hooks/usePagination";
 
 const BoardList = () => {
   const formRef = useRef(null);
   const [boardList, setBoardList] = useState([]);
+  const { pagination, setPagination, nextPage, prevPage, currentpage } = usePagination(getBoardList);
 
+  // 처음 한번만 불러와서 세팅
   useEffect(() => {
-    fetchBoardList();
+    // fetchBoardList();
+    getBoardList().then((data) => {
+      setBoardList(data.list);
+      setPagination(data.pagination);
+    });
   }, []);
 
-  const fetchBoardList = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/board/list");
-      const data = await response.json();
-      console.log(data.list);
+  // 페이지 정보가 변경될 경우에만 변경
+  useEffect(() => {
+    fetchBoardList();
+  }, [pagination]);
 
+  const fetchBoardList = useCallback(async () => {
+    // 마지막 또는 처음보다 작은곳 가는 경우 다시 안불러 오게 수정
+
+    const param = new URLSearchParams();
+    param.append("pageNo", pagination.pageNo ?? 1);
+
+    try {
+      const data = await getBoardList(param);
       setBoardList(data.list);
+      // setPagination(data.pagination);
     } catch (error) {
       console.error("Failed to fetch board list:", error);
     }
-  };
+  }, [pagination.pageNo]);
 
   // 게시물 추가
   const handleInsert = async (e) => {
@@ -61,7 +76,7 @@ const BoardList = () => {
           </tr>
         </thead>
         <tbody>
-          {boardList.length > 0 ? (
+          {boardList?.length > 0 ? (
             boardList.map((board) => <Board key={board.boardId} board={board} refresh={setBoardList} />)
           ) : (
             <tr>
@@ -71,6 +86,16 @@ const BoardList = () => {
         </tbody>
         <tfoot></tfoot>
       </table>
+
+      <Button title="<" onClick={prevPage} />
+      {Array(pagination?.pageSize ?? 0)
+        .fill("")
+        .map((_, idx) => {
+          idx += 1;
+          // let color = {};
+          return <Button key={idx} title={idx} onClick={() => currentpage(idx)} />;
+        })}
+      <Button title=">" onClick={nextPage} />
     </>
   );
 };

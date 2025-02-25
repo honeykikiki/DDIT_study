@@ -1,3 +1,16 @@
+export async function getBoardList(param) {
+  try {
+    const response = await fetch("http://localhost:8080/board/list?" + param?.toString());
+    const data = await response.json();
+
+    return data
+  } catch (error) {
+    console.error(error);
+    
+    return null 
+  }
+}
+
 export async function boardInsert(formRef) {
   const formData = new FormData();
   formData.append("title", formRef.current.title.value);
