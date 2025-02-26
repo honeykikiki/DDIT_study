@@ -46,12 +46,28 @@ function usePagination() {
     }))
   }
 
+  const firstPage = () => {
+    setPagination((prevParam) => ({
+      ...prevParam,
+      pageNo: 1,
+    }))
+  }
+  
+  const lastPage = () => {
+    setPagination((prevParam) => ({
+      ...prevParam,
+      pageNo: prevParam.pageSize,
+    }))
+  }
+
   return {
     pagination,
     setPagination,
     prevPage,
     nextPage,
-    currentpage: currentPage
+    currentPage,
+    firstPage,
+    lastPage,
   }
 }
 
