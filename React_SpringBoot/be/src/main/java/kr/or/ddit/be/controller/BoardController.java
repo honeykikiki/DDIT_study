@@ -28,6 +28,7 @@ public class BoardController {
         paginationVO.setSearchVO(boardVO);
 
         List<BoardVO> list = boardService.list(paginationVO);
+        log.debug("paginationVO => " + paginationVO);
         resultMap.put("list", list);
         resultMap.put("pagination", paginationVO);
         return resultMap;

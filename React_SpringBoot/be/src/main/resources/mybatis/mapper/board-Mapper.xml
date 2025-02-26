@@ -3,34 +3,33 @@
 <mapper namespace="kr.or.ddit.be.mapper.BoardMapper">
     <select id="getTotalCount" resultType="int" parameterType="paginationVO">
         SELECT COUNT(*) AS TOTAL_COUNT FROM BOARD
-        <where>
-            <if test="searchVO.title != null and searchVO.title != ''">
-                TITLE LIKE '%' || #{searchVO.title} || '%'
-            </if>
-            <if test="searchVO.content != null and searchVO.content != ''">
-                CONTENT LIKE '%' || #{searchVO.content} || '%'
-            </if>
-            <if test="searchVO.writer != null and searchVO.writer != ''">
-                WRITER LIKE '%' || #{searchVO.writer} || '%'
-            </if>
-        </where>
+        WHERE 1 = 1
+        <if test="searchVO.title != null and searchVO.title != ''">
+            AND TITLE LIKE '%' || #{searchVO.title} || '%'
+        </if>
+        <if test="searchVO.content != null and searchVO.content != ''">
+            AND CONTENT LIKE '%' || #{searchVO.content} || '%'
+        </if>
+        <if test="searchVO.writer != null and searchVO.writer != ''">
+            AND WRITER LIKE '%' || #{searchVO.writer} || '%'
+        </if>
     </select>
 
     <select id="list" resultType="BoardVO" parameterType="paginationVO">
         SELECT BOARD_ID, TITLE, CONTENT, WRITER, CREATE_DATE
 
         FROM BOARD
-        <where>
-            <if test="searchVO.title != null and searchVO.title != ''">
-                TITLE LIKE '%' || #{searchVO.title} || '%'
-            </if>
-            <if test="searchVO.content != null and searchVO.content != ''">
-                CONTENT LIKE '%' || #{searchVO.content} || '%'
-            </if>
-            <if test="searchVO.writer != null and searchVO.writer != ''">
-                WRITER LIKE '%' || #{searchVO.writer} || '%'
-            </if>
-        </where>
+        WHERE 1 = 1
+        <if test="searchVO.title != null and searchVO.title != ''">
+            AND TITLE LIKE '%' || #{searchVO.title} || '%'
+        </if>
+        <if test="searchVO.content != null and searchVO.content != ''">
+            AND CONTENT LIKE '%' || #{searchVO.content} || '%'
+        </if>
+        <if test="searchVO.writer != null and searchVO.writer != ''">
+            AND WRITER LIKE '%' || #{searchVO.writer} || '%'
+        </if>
+
         ORDER BY CREATE_DATE DESC
         OFFSET (#{pageNo} - 1) * #{recordCountPerPage} ROWS FETCH FIRST #{recordCountPerPage} ROWS ONLY
     </select>

@@ -1,70 +1,58 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Board from "./Board";
-import Input from "../components/Input";
 import Button from "../components/Button";
-import { boardInsert, getBoardList } from "../remote/board";
+import { getBoardList } from "../remote/board";
 import usePagination from "../hooks/usePagination";
+import BoardInsertForm from "../components/BoardInsertForm";
+import SearchForm from "../components/SearchForm";
 
+/**
+ *
+ * @error
+ *
+ * 현재 검색 기능이 문제됨
+ * 다시 조회 하는경우
+ */
 const BoardList = () => {
-  const formRef = useRef(null);
+  const [bRefresh, setBRefresh] = useState(false);
   const [boardList, setBoardList] = useState([]);
-  const { pagination, setPagination, nextPage, prevPage, currentpage } = usePagination(getBoardList);
+  const { pagination, setPagination, nextPage, prevPage, currentPage } = usePagination(getBoardList);
 
   // 처음 한번만 불러와서 세팅
   useEffect(() => {
-    // fetchBoardList();
     getBoardList().then((data) => {
       setBoardList(data.list);
       setPagination(data.pagination);
     });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bRefresh]);
 
   // 페이지 정보가 변경될 경우에만 변경
   useEffect(() => {
     fetchBoardList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination]);
 
   const fetchBoardList = useCallback(async () => {
-    // 마지막 또는 처음보다 작은곳 가는 경우 다시 안불러 오게 수정
-
     const param = new URLSearchParams();
     param.append("pageNo", pagination.pageNo ?? 1);
+    param.append("title", pagination.searchVO.title ?? 1);
+    param.append("content", pagination.searchVO.content ?? 1);
+    param.append("writer", pagination.searchVO.writer ?? 1);
 
     try {
       const data = await getBoardList(param);
+      console.log(2);
       setBoardList(data.list);
-      // setPagination(data.pagination);
     } catch (error) {
       console.error("Failed to fetch board list:", error);
     }
-  }, [pagination.pageNo]);
-
-  // 게시물 추가
-  const handleInsert = async (e) => {
-    e.preventDefault();
-
-    // 폼이 없는경우 에러처리
-    if (formRef === null) return;
-
-    const data = await boardInsert(formRef);
-    if (data !== null && data.code === 1) {
-      setBoardList((prevBoard) => [data.item, ...prevBoard]);
-      formRef.current.title.value = "";
-      formRef.current.content.value = "";
-      formRef.current.writer.value = "";
-    }
-  };
+  }, [pagination]);
 
   return (
     <>
       <div>Board</div>
-      <form ref={formRef}>
-        title <Input dataName="title" /> <br />
-        content <Input dataName="content" /> <br />
-        writer <Input dataName="writer" /> <br />
-        file <input id="files" name="files" type="file" multiple /> <br />
-        <Button title={"추가"} onClick={handleInsert} />
-      </form>
+      <BoardInsertForm setBoardList={setBoardList} />
 
       <table border={1}>
         <thead>
@@ -87,15 +75,22 @@ const BoardList = () => {
         <tfoot></tfoot>
       </table>
 
+      {pagination?.pageSize}
+      <br />
+      {pagination?.totalCount}
+
       <Button title="<" onClick={prevPage} />
+
       {Array(pagination?.pageSize ?? 0)
         .fill("")
         .map((_, idx) => {
           idx += 1;
           // let color = {};
-          return <Button key={idx} title={idx} onClick={() => currentpage(idx)} />;
+          return <Button key={idx} title={idx} onClick={() => currentPage(idx)} />;
         })}
       <Button title=">" onClick={nextPage} />
+
+      <SearchForm setPagination={setPagination} setBRefresh={setBRefresh} />
     </>
   );
 };
