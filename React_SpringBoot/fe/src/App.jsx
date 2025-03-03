@@ -1,9 +1,9 @@
-import BoardList from "./board/BoardList";
+import Router from "./components/Router";
 
 function App() {
   return (
     <>
-      <BoardList />
+      <Router />
     </>
   );
 }

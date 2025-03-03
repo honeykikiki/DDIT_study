@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { boardDelete, boardUpdate as boardUpdate } from "../remote/board";
-import Input from "../components/Input";
-import Button from "../components/Button";
+import { boardDelete, boardUpdate as boardUpdate } from "../../remote/board";
+import Input from "../Input";
+import Button from "../Button";
 
 // eslint-disable-next-line react/prop-types
 const Board = ({ board, refresh }) => {

@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from "react";
 import Board from "./Board";
-import { getBoardList } from "../remote/board";
-import usePagination from "../hooks/usePagination";
-import BoardInsertForm from "../components/BoardInsertForm";
-import SearchForm from "../components/SearchForm";
-import Pagination from "../components/Pagination";
+import { getBoardList } from "../../remote/board";
+import usePagination from "../../hooks/usePagination";
+import BoardInsertForm from "../BoardInsertForm";
+import SearchForm from "../SearchForm";
+import Pagination from "../Pagination";
 
 /**
  *
@@ -66,20 +66,16 @@ const BoardList = () => {
       <table border={1}>
         <thead>
           <tr>
-            <td>제목</td>
-            <td>내용</td>
-            <td>작성자</td>
-            <td>작성일</td>
+            <th style={{ border: "1px solid black" }}>제목</th>
+            <th style={{ border: "1px solid black" }}>내용</th>
+            <th style={{ border: "1px solid black" }}>작성자</th>
+            <th style={{ border: "1px solid black" }}>작성일</th>
           </tr>
         </thead>
         <tbody>
-          {boardList?.length > 0 ? (
-            boardList.map((board) => <Board key={board.boardId} board={board} refresh={setBoardList} />)
-          ) : (
-            <tr>
-              <td colSpan={4}>정보가 없습니다</td>
-            </tr>
-          )}
+          {boardList?.length > 0
+            ? boardList.map((board) => <Board key={board.boardId} board={board} refresh={setBoardList} />)
+            : null}
         </tbody>
         <tfoot></tfoot>
       </table>
