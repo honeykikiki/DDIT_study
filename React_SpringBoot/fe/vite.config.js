@@ -13,6 +13,8 @@ export default defineConfig({
   build: {
     outDir: "../be/src/main/resources/static",
     assetsDir: "assets"
-  }
+  },
+  define: {global: 'window'}
+  
 
 })
