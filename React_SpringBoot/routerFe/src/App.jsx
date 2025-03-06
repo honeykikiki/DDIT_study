@@ -1,10 +1,11 @@
+import { BrowserRouter } from "react-router";
 import Router from "./components/router";
 
 function App() {
   return (
-    <>
-      <Router></Router>
-    </>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   );
 }
 

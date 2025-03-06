@@ -9,11 +9,14 @@ import BoardUpdatePage from "../page/board/Update";
 function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/board" element={<BoardListPage />} />
-      <Route path="/board/detail" element={<BoardDetailPage />} />
-      <Route path="/board/insert" element={<BoardInsertPage />} />
-      <Route path="/board/update" element={<BoardUpdatePage />} />
+      <Route path="/" element={<Home />}>
+        <Route path="/board" element={<BoardListPage />} />
+        <Route path="/board/detail" element={<BoardDetailPage />} />
+        <Route path="/board/insert" element={<BoardInsertPage />} />
+        <Route path="/board/update" element={<BoardUpdatePage />} />
+      </Route>
+
+      <Route path="/*" element={<Home />} />
     </Routes>
   );
 }
