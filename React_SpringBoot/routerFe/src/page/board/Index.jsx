@@ -1,5 +1,14 @@
-function BoardListPage() {
-  return <div>BoardListPage</div>;
+import { Outlet } from "react-router";
+import Navigation from "../../components/Navigation";
+
+function BoardPage() {
+  return (
+    <div>
+      <Navigation />
+
+      <Outlet />
+    </div>
+  );
 }
 
-export default BoardListPage;
+export default BoardPage;

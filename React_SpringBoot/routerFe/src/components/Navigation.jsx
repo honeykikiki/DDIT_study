@@ -11,7 +11,7 @@ export default function Navigation() {
                 <Link to={"/"}>Home</Link>
               </div>
               <div className="ml-4 flex lg:ml-0">
-                <Link to={"/board"}>게시판 바로가기</Link>
+                <Link to={"/board/list"}>게시판 바로가기</Link>
               </div>
             </div>
           </div>

@@ -2,18 +2,19 @@ import { Route, Routes } from "react-router";
 
 import Home from "../page/Home";
 import BoardDetailPage from "../page/board/Detail";
-import BoardListPage from "../page/board/Index";
+import BoardListPage from "../page/board/List";
 import BoardInsertPage from "../page/board/Insert";
 import BoardUpdatePage from "../page/board/Update";
+import BoardPage from "../page/board/Index";
 
 function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Home />}>
-        <Route path="/board" element={<BoardListPage />} />
-        <Route path="/board/detail" element={<BoardDetailPage />} />
-        <Route path="/board/insert" element={<BoardInsertPage />} />
-        <Route path="/board/update" element={<BoardUpdatePage />} />
+      <Route path="/board" element={<BoardPage />}>
+        <Route path="list" element={<BoardListPage />} />
+        <Route path="detail" element={<BoardDetailPage />} />
+        <Route path="insert" element={<BoardInsertPage />} />
+        <Route path="update" element={<BoardUpdatePage />} />
       </Route>
 
       <Route path="/*" element={<Home />} />
