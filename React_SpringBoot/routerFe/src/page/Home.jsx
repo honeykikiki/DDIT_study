@@ -9,6 +9,8 @@ function Home() {
       <Outlet />
 
       <DatePicker />
+
+      <a href="https://ant.design/docs/react/introduce">ANT디자인 여기 경로 가면됨</a>
     </div>
   );
 }
