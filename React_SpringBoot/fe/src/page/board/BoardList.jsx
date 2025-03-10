@@ -1,20 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from "react";
-import Board from "./Board";
+import Board from "../../components/board/Board";
 import { getBoardList } from "../../remote/board";
 import usePagination from "../../hooks/usePagination";
-import BoardInsertForm from "../BoardInsertForm";
-import SearchForm from "../SearchForm";
-import Pagination from "../Pagination";
+import SearchForm from "../../components/SearchForm";
+import Pagination from "../../components/Pagination";
 
 /**
- *
  * @error
  * 현재 검색 기능이 문제됨
  * 다시 조회 하는경우 문제가 있음
  *
  * 해결 방법
- * 1. 검색 기능 조회 시 리랜더링 되어야함 근데 문제가 되는게 페이지 정보를 가져오지 못하고 있음
+ * 1. 검색 기능 조회 시 리랜더링 되어야함 근데 문제가 되는게 페이지 정보를 가져오지 못하고 있음 - 해결
  */
 const BoardList = () => {
   const [bRefresh, setBRefresh] = useState(false);

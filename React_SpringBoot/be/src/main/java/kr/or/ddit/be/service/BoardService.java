@@ -2,6 +2,7 @@ package kr.or.ddit.be.service;
 
 import kr.or.ddit.be.mapper.BoardMapper;
 import kr.or.ddit.be.mapper.FilesMapper;
+import kr.or.ddit.be.util.UploadFile;
 import kr.or.ddit.be.vo.BoardVO;
 import kr.or.ddit.be.vo.FileVO;
 import kr.or.ddit.be.vo.PaginationVO;
@@ -23,21 +24,24 @@ import java.util.UUID;
 @Service
 public class BoardService {
     @Autowired
-    BoardMapper boardMapper;
+    private BoardMapper boardMapper;
 
     @Autowired
-    FilesMapper filesMapper;
+    private FilesMapper filesMapper;
+
+    @Autowired
+    private UploadFile uploadFile;
 
     public List<BoardVO> list(PaginationVO<BoardVO> searchBoardVO) {
         List<BoardVO> list = boardMapper.list(searchBoardVO);
 
         /*
-        * 모든 게시물 카운트
-        * 몇개씩 가져오는지
-        * 현재 페이지
-        * 전체 페이지 카운트
-        * 검색 정보
-        * */
+         * 모든 게시물 카운트
+         * 몇개씩 가져오는지
+         * 현재 페이지
+         * 전체 페이지 카운트
+         * 검색 정보
+         * */
 
         // 페이지 전체 정보 가져오기
         int totalCount = boardMapper.getTotalCount(searchBoardVO);
@@ -62,28 +66,31 @@ public class BoardService {
 
         if (result == 1 && bdFiles != null && bdFiles.length > 0) {
             // 파일 추가하기
-            List<FileVO> fileList = Arrays.stream(bdFiles).map(boardVO1 -> {
-                String saveDir = "/Users/heoseongjin/Documents/GitHub/ddit/ys/board/";
-                String saveName = UUID.randomUUID().toString().replace("-", "");
-                File file = new File(saveDir + saveName);
-                if (!new File(saveDir).isDirectory()) new File(saveDir).mkdir();
+            List<FileVO> fileVOList = this.uploadFile.addFile("board", bdFiles, boardVO.getBoardId());
 
-                try {
-                    boardVO1.transferTo(file);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
 
-                FileVO fileVO = new FileVO();
+//            List<FileVO> fileList = Arrays.stream(bdFiles).map(boardVO1 -> {
+//                String saveDir = "/Users/heoseongjin/Documents/GitHub/ddit/ys/board/";
+//                String saveName = UUID.randomUUID().toString().replace("-", "");
+//                File file = new File(saveDir + saveName);
+//                FileVO fileVO = new FileVO();
+//                if (!new File(saveDir).isDirectory()) new File(saveDir).mkdir();
+//
+//                try {
+//                    boardVO1.transferTo(file);
+//
+//                    fileVO.setFileName("/board/" + saveName);
+//                    fileVO.setContent(boardVO1.getOriginalFilename());
+//                    fileVO.setBoardId(boardVO.getBoardId());
+//                    filesMapper.insert(fileVO);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//                return fileVO;
+//            }).toList();
 
-                fileVO.setFileName("/board/" + saveName);
-                fileVO.setContent(boardVO1.getOriginalFilename());
-                fileVO.setBoardId(boardVO.getBoardId());
-                filesMapper.insert(fileVO);
-                return fileVO;
-            }).toList();
-
-            boardVO.setFileVOList(fileList);
+            boardVO.setFileVOList(fileVOList);
         }
 
         return result;

@@ -58,7 +58,6 @@ export async function boardUpdate(curBoard) {
   }
 }
 
-
 export async function boardDelete(boardId) {
   try {
     const response = await fetch("http://localhost:8080/board/delete", {

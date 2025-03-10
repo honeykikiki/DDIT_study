@@ -1,7 +1,9 @@
 package kr.or.ddit.be.controller;
 
 import kr.or.ddit.be.service.ChatService;
+import kr.or.ddit.be.util.UploadFile;
 import kr.or.ddit.be.vo.ChatVO;
+import kr.or.ddit.be.vo.FileVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,21 +11,24 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Controller
 public class WebSocketController {
     @Autowired
     private ChatService chatService;
+
+    @Autowired
+    private UploadFile UploadFile;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -37,27 +42,11 @@ public class WebSocketController {
         }
 
         if (ChatVO.MessageType.FILE.equals(message.getType())) {
-            byte[] decodedFile = Base64.getDecoder().decode(message.getFileData().split(",")[1]);
-            String saveDir = "/Users/heoseongjin/Documents/GitHub/ddit/ys/chat/";
-            if (!new File(saveDir).isDirectory()) new File(saveDir).mkdir();
-            String saveName = UUID.randomUUID().toString().replace("-", "");
-            Path filePath = Paths.get(saveDir + saveName);
-
-            try {
-                log.debug("filePath => {}", filePath);
-                Files.write(filePath, decodedFile);
-                message.setFileName("/chat/" + saveName);
-                log.info("파일 저장 완료: {}", filePath.toString());
-            } catch (IOException e) {
-                log.error("파일 저장 중 오류 발생", e);
-            }
+            String saveName = UploadFile.uploadFileToBinary("chat", message.getFileData());
+            message.setFileName(saveName);
         }
 
         // chatService.saveChat(message);//메시지를 받을때마다 데이터베이스에 저장
-        if (ChatVO.MessageType.IMG.equals(message.getType())) {
-            //이미지인 경우 처리할 로직
-        }
-
         // 메시지를 해당 채팅방 구독자들에게 전송
         // 채팅방 들어온 사람들 모음
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
@@ -66,6 +55,20 @@ public class WebSocketController {
     }
 
     // 채팅방 목록
+    @PostMapping("/message/file")
+    @ResponseBody
+    public Map<String, Object> sendFile(MultipartFile[] uploadFiles) {
+        log.debug("uploadFiles => {}", Arrays.toString(uploadFiles));
+        Map<String, Object> resultMap = new HashMap<>();
+        List<FileVO> fileVOList = null;
+        // 파일 업로드
+        if (uploadFiles != null && uploadFiles.length > 0) {
+            fileVOList = this.UploadFile.addFile("chat", uploadFiles, 0);
+        }
 
+        resultMap.put("fileVOList", fileVOList);
+
+        return resultMap;
+    }
 
 }

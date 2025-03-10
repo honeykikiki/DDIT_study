@@ -5,6 +5,7 @@ import SockJS from "sockjs-client";
 const RECONNECT_INTERVAL = 5000; // 5초 후 재연결 시도
 
 const ChatPage = () => {
+  const fileRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
   const [username, setUsername] = useState("");
@@ -75,11 +76,37 @@ const ChatPage = () => {
     });
   }, [messages]);
 
-  const sendMessage = () => {
+  const fileSend = async () => {
+    const files = fileRef.current.files;
+    if (fileRef.current.files.length > 0) {
+      const formData = new FormData();
+      // formData.append(`uploadFiles`, files[0]);
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        formData.append(`uploadFiles`, file);
+        formData.append(`uploadFiles2`, file);
+      }
+
+      const response = await fetch("http://localhost:8080/message/file", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      return data.fileVOList;
+    }
+  };
+
+  const sendMessage = async () => {
     if (!stompClient.current || !stompClient.current.connected) {
       console.error("STOMP 클라이언트가 아직 연결되지 않았습니다.");
       return;
     }
+
+    const fileList = await fileSend();
+    console.log(fileList);
 
     const roomId = "test";
     const message = {
@@ -168,8 +195,10 @@ const ChatPage = () => {
         <button onClick={sendMessage}>전송</button>
       </div>
 
-      <input type="file" onChange={handleFileChange} />
+      <input type="file" ref={fileRef} multiple onChange={handleFileChange} />
       <button onClick={sendFileMessage}>파일 전송</button>
+
+      <button onClick={fileSend}>클릭 미</button>
     </div>
   );
 };

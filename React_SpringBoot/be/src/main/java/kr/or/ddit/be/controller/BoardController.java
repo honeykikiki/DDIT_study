@@ -13,7 +13,6 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/board")
-@CrossOrigin("*")
 public class BoardController {
     private final BoardService boardService;
 
