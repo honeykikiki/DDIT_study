@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class BoardVO {
+    private int rnum;
     private int boardId;
     private String title;
     private String content;

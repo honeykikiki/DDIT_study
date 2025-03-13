@@ -1,9 +1,12 @@
 package kr.or.ddit.be.controller;
 
+import jakarta.servlet.http.HttpSession;
 import kr.or.ddit.be.service.BoardService;
 import kr.or.ddit.be.vo.BoardVO;
 import kr.or.ddit.be.vo.PaginationVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -11,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
@@ -20,6 +23,30 @@ public class BoardController {
         this.boardService = boardService;
     }
 
+
+    @GetMapping("/listToJsp")
+    public String list(Model model,
+                       PaginationVO<BoardVO> paginationVO) {
+        List<BoardVO> list = boardService.list(paginationVO);
+        log.info("list = > " + list);
+        model.addAttribute("list", list);
+        model.addAttribute("pagenation", paginationVO);
+
+        return "board/list";
+    }
+
+    @GetMapping("/detailToJsp")
+    public String detail(Model model,
+                         BoardVO boardVO) {
+        BoardVO detail = boardService.findById(boardVO.getBoardId());
+        log.info("detail = > " + detail);
+        model.addAttribute("detail", detail);
+
+        return "board/detail";
+    }
+
+    //    HttpSession session
+    @ResponseBody
     @GetMapping("/list")
     public Map<String, Object> list(PaginationVO<BoardVO> paginationVO,
                                     BoardVO boardVO) {
@@ -30,9 +57,11 @@ public class BoardController {
         log.debug("paginationVO => " + paginationVO);
         resultMap.put("list", list);
         resultMap.put("pagination", paginationVO);
+
         return resultMap;
     }
 
+    @ResponseBody
     @PostMapping("/insert")
     public Map<String, Object> insert(BoardVO boardVO) {
         log.debug("boardVO: {}", boardVO);
@@ -46,6 +75,7 @@ public class BoardController {
         return resultMap;
     }
 
+    @ResponseBody
     @PostMapping("/update")
     public Map<String, Object> update(BoardVO boardVO) {
         log.debug("boardVO: {}", boardVO);
@@ -54,9 +84,10 @@ public class BoardController {
         resultMap.put("item", boardVO);
         resultMap.put("code", result);
         log.debug("boardVO: {}", boardVO);
-        return  resultMap;
+        return resultMap;
     }
 
+    @ResponseBody
     @PostMapping("/delete")
     public Map<String, Object> delete(@RequestBody BoardVO boardVO) {
         log.debug("boardVO: {}", boardVO);
@@ -64,6 +95,6 @@ public class BoardController {
         int delete = boardService.delete(boardVO.getBoardId());
         resultMap.put("code", delete);
 
-        return  resultMap;
+        return resultMap;
     }
 }

@@ -7,7 +7,9 @@ function Home() {
         <Link to={"/"}>홈</Link>
         <Link to={"/board"}>게시판</Link>
         <Link to={"/chat"}>채팅</Link>
+        <Link to={"/user"}>유저</Link>
       </div>
+
       <Outlet />
     </div>
   );

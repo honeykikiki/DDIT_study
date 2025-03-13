@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.be.mapper.BoardMapper">
+    <sql id="listWhereCondition">
+        <if test="searchVO.title != null and searchVO.title != ''">
+            AND TITLE LIKE '%' || #{searchVO.title} || '%'
+        </if>
+        <if test="searchVO.content != null and searchVO.content != ''">
+            AND CONTENT LIKE '%' || #{searchVO.content} || '%'
+        </if>
+        <if test="searchVO.writer != null and searchVO.writer != ''">
+            AND WRITER LIKE '%' || #{searchVO.writer} || '%'
+        </if>
+    </sql>
+
     <select id="getTotalCount" resultType="int" parameterType="paginationVO">
         SELECT COUNT(*) AS TOTAL_COUNT FROM BOARD
         WHERE 1 = 1
-        <if test="searchVO.title != null and searchVO.title != ''">
-            AND TITLE LIKE '%' || #{searchVO.title} || '%'
-        </if>
-        <if test="searchVO.content != null and searchVO.content != ''">
-            AND CONTENT LIKE '%' || #{searchVO.content} || '%'
-        </if>
-        <if test="searchVO.writer != null and searchVO.writer != ''">
-            AND WRITER LIKE '%' || #{searchVO.writer} || '%'
-        </if>
+        <include refid="listWhereCondition" />
     </select>
 
     <select id="list" resultType="BoardVO" parameterType="paginationVO">
-        SELECT BOARD_ID, TITLE, CONTENT, WRITER, CREATE_DATE
-
+        SELECT ROW_NUMBER() OVER(ORDER BY BOARD_ID DESC) RNUM,
+               BOARD_ID, TITLE, CONTENT, WRITER, CREATE_DATE
         FROM BOARD
         WHERE 1 = 1
-        <if test="searchVO.title != null and searchVO.title != ''">
-            AND TITLE LIKE '%' || #{searchVO.title} || '%'
-        </if>
-        <if test="searchVO.content != null and searchVO.content != ''">
-            AND CONTENT LIKE '%' || #{searchVO.content} || '%'
-        </if>
-        <if test="searchVO.writer != null and searchVO.writer != ''">
-            AND WRITER LIKE '%' || #{searchVO.writer} || '%'
-        </if>
-
+        <include refid="listWhereCondition" />
         ORDER BY CREATE_DATE DESC
         OFFSET (#{pageNo} - 1) * #{recordCountPerPage} ROWS FETCH FIRST #{recordCountPerPage} ROWS ONLY
     </select>
