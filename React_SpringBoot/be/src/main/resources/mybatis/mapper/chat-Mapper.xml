@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.be.mapper.ChatMapper">
+    <update id="readChatMsg" parameterType="hashmap">
+        UPDATE CHAT_EMP
+        SET LAST_CNFIRM_NO = #{mssageSn}
+        WHERE CHTT_ROOM_NO = #{chttRoomNo}
+        AND EMPL_NO = #{emplNo}
+    </update>
+
+    <update id="updateRecentMsg" parameterType="chatVO">
+        UPDATE CHAT_ROOM
+        SET LAST_MSSAGE_NO = #{mssageSn}
+        WHERE CHTT_ROOM_NO = #{chttRoomNo}
+    </update>
+
+    <select id="chatList" resultType="chatRoomVO" parameterType="int">
+        SELECT CR.CHTT_ROOM_NO, CHTT_ROOM_TY, CHTT_ROOM_NM,
+               NVL(CR.LAST_MSSAGE_NO - CE.LAST_CNFIRM_NO, 0) as READ_COUNT,
+               NVL(M.CREAT_DE, CR.CREAT_DE) AS CREAT_DE,
+               M.MSSAGE_CN as LAST_MSG,
+               M.MSSAGE_TY
+        FROM CHAT_ROOM CR
+        LEFT JOIN CHAT_EMP CE on (CR.CHTT_ROOM_NO = CE.CHTT_ROOM_NO)
+        LEFT JOIN MESSAGE M ON (M.MSSAGE_SN = CR.LAST_MSSAGE_NO AND M.CHTT_ROOM_NO = CR.CHTT_ROOM_NO)
+        WHERE CE.EMPL_NO = #{emplNo}
+        ORDER BY CREAT_DE DESC
+    </select>
+
+    <insert id="insertMessage" parameterType="chatVO">
+        <selectKey resultType="int" order="BEFORE" keyProperty="mssageSn">
+            SELECT NVL(MAX(MSSAGE_SN), 0) + 1 FROM MESSAGE
+            WHERE CHTT_ROOM_NO = #{chttRoomNo}
+        </selectKey>
+
+        INSERT INTO MESSAGE(
+            MSSAGE_SN, EMPL_NO, CHTT_ROOM_NO, MSSAGE_CN, MSSAGE_TY, CREAT_DE
+        )
+        VALUES (
+            #{mssageSn}, #{emplNo}, #{chttRoomNo}, #{mssageCn}, #{mssageTy}, #{creatDe}
+        )
+    </insert>
+
+    <select id="selectChatList" parameterType="hashmap" resultType="kr.or.ddit.be.vo.ChatVO">
+        SELECT MSSAGE_SN,
+               M.EMPL_NO,
+               CHTT_ROOM_NO,
+               MSSAGE_CN,
+               M.CREAT_DE,
+               MSSAGE_TY,
+               E.EMPL_NO,
+               EMPL_NM
+        FROM MESSAGE M
+        LEFT JOIN EMPLOYEE E ON (M.EMPL_NO = E.EMPL_NO)
+        WHERE CHTT_ROOM_NO = #{chttRoomNo}
+        ORDER BY MSSAGE_SN
+    </select>
+
+    <select id="invalidChatRoom" resultType="java.lang.Integer">
+--         SELECT CHAT_ROOM_NO
+--         FROM CHAT_ROOM
+    </select>
+
+    <select id="chatEmpNoList" resultType="int" parameterType="chatVO">
+        SELECT EMPL_NO
+        FROM CHAT_EMP
+        WHERE CHTT_ROOM_NO = #{chttRoomNo}
+        AND EMPL_NO != #{emplNo}
+    </select>
+</mapper>
