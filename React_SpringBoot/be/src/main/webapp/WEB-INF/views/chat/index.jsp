@@ -83,7 +83,7 @@
 											<%--채팅방 목록--%>
 											<ul class="list-unstyled mb-0">
 												<c:forEach var="chatRoom" items="${chatRoomVOList}">
-													<li class="p-2 border-bottom chatRoom" data-chtt-room-no="${chatRoom.chttRoomNo}">
+													<li class="p-2 rounded border-bottom chatRoom" data-chtt-room-no="${chatRoom.chttRoomNo}">
 														<div class="d-flex justify-content-between text-truncate" style="cursor: pointer">
 															<div class="d-flex flex-row">
 																	<%-- 채팅방 상대 이미지 --%>
@@ -177,23 +177,22 @@
 									<div class="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2 gap-3">
 										<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp" alt="avatar 3" class="chat-avatar">
 										<div class="position-relative">
+<%--											<ul class="position-absolute bottom-100 mb-2 bg-white border rounded mt-1 w-100">--%>
+<%--												--%>
+<%--												<c:forEach var="idx" begin="1" end="5">--%>
+<%--													${idx}--%>
+<%--												</c:forEach>--%>
+<%--												--%>
+<%--												<li class="p-2">--%>
+<%--													<img--%>
+<%--															src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"--%>
+<%--															alt="avatar" class="d-flex align-self-center me-3"--%>
+<%--															width="60">--%>
+<%--													허성진--%>
+<%--												</li>--%>
+<%--												--%>
+<%--											</ul>--%>
 											
-											
-											<ul class="position-absolute bottom-100 mb-2 bg-white border rounded mt-1 w-100">
-												
-												<c:forEach var="idx" begin="1" end="5">
-													${idx}
-												</c:forEach>
-												
-												<li class="p-2">
-													<img
-															src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-															alt="avatar" class="d-flex align-self-center me-3"
-															width="60">
-													허성진
-												</li>
-												
-											</ul>
 											<input type="text" class="form-control form-control-lg" id="messageInput" placeholder="메세지를 입력해주세요." />
 										</div>
 										

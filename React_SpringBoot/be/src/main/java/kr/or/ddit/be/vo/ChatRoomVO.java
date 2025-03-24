@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class ChatRoomVO {
+
     private int chttRoomNo;
     private String chttRoomNm;
     private Date creatDe;
@@ -18,4 +19,6 @@ public class ChatRoomVO {
     // 채팅방에 들어가 있는 사람들
     private int[] emplNo;
     private int chatLastRead;
+
+
 }

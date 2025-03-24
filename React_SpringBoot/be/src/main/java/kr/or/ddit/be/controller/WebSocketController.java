@@ -2,9 +2,7 @@ package kr.or.ddit.be.controller;
 
 import kr.or.ddit.be.service.ChatService;
 import kr.or.ddit.be.util.UploadFile;
-import kr.or.ddit.be.vo.ChatRoomVO;
-import kr.or.ddit.be.vo.ChatVO;
-import kr.or.ddit.be.vo.FileVO;
+import kr.or.ddit.be.vo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +46,15 @@ public class WebSocketController {
     // 채팅 메시지 수신 및 저장
     @MessageMapping("/chat/message")
     public ResponseEntity<String> receiveMessage(@Payload ChatVO message) {
+        EmplVO emplVO = new EmplVO();
+
+        List<AuthorVO.AuthType> authList = emplVO.getAuthList();
+
+        if (!emplVO.validWrite()) {
+            return ResponseEntity.ok("메시지 쓰기 권한이 없습니다.");
+        }
+
+
         if (ChatVO.MessageType.JOIN.equals(message.getType())) {
             message.setMssageCn(message.getEmplNm() + "님이 입장하셨습니다.");
         }

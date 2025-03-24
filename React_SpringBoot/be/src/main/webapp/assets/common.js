@@ -269,6 +269,11 @@ function submitMessage({messageValue, type, chttRoomNo, emplNo}) {
     document.querySelector("#realChatList"),
     {message}
   );
+
+  setTimeout(() => {
+    let chatList = document.querySelector("#chatList");
+    chatList.scrollTop = chatList.scrollHeight; // 채팅 밑으로 내리기
+  }, 10)
 }
 
 /**
@@ -319,11 +324,6 @@ function buildChatMessage(dom, {message}) {
     // 이전 채팅
     dom.insertAdjacentHTML("afterend", messageHTML);
   }
-
-  setTimeout(() => {
-    let chatList = document.querySelector("#chatList");
-    chatList.scrollTop = chatList.scrollHeight; // 채팅 밑으로 내리기
-  }, 10)
 }
 
 function findOpenChatRoomNo() {
