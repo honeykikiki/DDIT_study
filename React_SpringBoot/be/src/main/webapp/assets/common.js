@@ -280,7 +280,6 @@ function submitMessage({messageValue, type, chttRoomNo, emplNo}) {
  *             empName - 사용자 이름
  *             created - 메세지 보낸 시간
  *             bPrevChat - 이전 채팅 내역
- *
  */
 function buildChatMessage(dom, {message}) {
   // 보내는 사람이랑 받는 사람이 같은 경우는 내가보낸 것
@@ -306,7 +305,7 @@ function buildChatMessage(dom, {message}) {
               <p class="ms-4" style="font-size: 0.5rem">${message.emplNm}</p>
               ${ message.type === TALK ?
               `<p class="small p-2 ms-3 mb-1 rounded-3 bg-body-secondary">${message.mssageCn}</p>`
-              : `<img src="/ys/${message.mssageCn}" class="me-3 mb-1 rounded float-start w-50" alt="...">`}
+              : `<img src="/ys/${message.mssageCn}" class="ms-3 mb-1 rounded float-start w-50" alt="...">`}
               <p class="small ms-3 mb-3 rounded-3 text-muted float-end" style="font-size: 0.5rem">${formatDate(new Date(message.creatDe))}</p>
           </div>
       </div>

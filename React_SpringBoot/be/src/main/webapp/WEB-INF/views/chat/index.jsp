@@ -150,12 +150,12 @@
 										
 										<%-- 옵저버 블록 --%>
 										<div id="observerBlock"></div>
+										<%-- 채팅 온경우 알림 --%>
 										<div class="mx-2 mb-4 p-2 rounded-2 bg-warning-400 text-center">마지막 채팅입니다.</div>
 										
 											<%--진짜 채팅이 들어가느 구간--%>
 										<div id="realChatList"></div>
 										
-										<%-- 채팅 온경우 알림 --%>
 										<div id="chatInnerAlert"
 												 class="position-absolute left-0 m-2 px-3 py-2 rounded-2
 												        bg-warning-400 text-truncate d-flex justify-content-between
