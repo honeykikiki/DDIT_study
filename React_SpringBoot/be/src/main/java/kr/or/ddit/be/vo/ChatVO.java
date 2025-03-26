@@ -22,7 +22,7 @@ public class ChatVO {
 
     // private String fileName; // 파일 저장 경로
     // private String fileData; // Base64 인코딩된 파일 데이터
-//    private int targetEmpNo; // 받아야 하는 사람 정보
+    // private int targetEmpNo; // 받아야 하는 사람 정보
 
     public void setType(String type) {
         switch (type) {

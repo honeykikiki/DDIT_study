@@ -15,17 +15,17 @@ public class EmplVO {
 
     private List<AuthorVO.AuthType> authList; // 0 쓰기 1 읽기 2 수정 3 삭제
 
-    public void setAuthType(int type) {
-        switch (type) {
-            case 1 -> authList.add(AuthorVO.AuthType.WRITER);
-            case 2 -> authList.add(AuthorVO.AuthType.READ);
-            case 3 -> authList.add(AuthorVO.AuthType.UPDATE);
-            case 4 -> authList.add(AuthorVO.AuthType.DELETE);
-        }
-    }
-
-    public boolean validWrite() {
-        return authList.contains(AuthorVO.AuthType.WRITER);
-    }
+//    public void setAuthType(int type) {
+//        switch (type) {
+//            case 1 -> authList.add(AuthorVO.AuthType.WRITER);
+//            case 2 -> authList.add(AuthorVO.AuthType.READ);
+//            case 3 -> authList.add(AuthorVO.AuthType.UPDATE);
+//            case 4 -> authList.add(AuthorVO.AuthType.DELETE);
+//        }
+//    }
+//
+//    public boolean validWrite() {
+//        return authList.contains(AuthorVO.AuthType.WRITER);
+//    }
 }
 

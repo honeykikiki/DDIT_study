@@ -14,7 +14,7 @@ public class BoardVO {
     private String content;
     private String writer;
     private Date createDate;
-    private List<FileVO> fileVOList;
+    private List<AttachFileVO> attachFileVOList;
 
     private MultipartFile[] files;
 }

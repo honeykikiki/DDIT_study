@@ -10,7 +10,6 @@
 <c:set var="now" value="<%= new java.util.Date() %>" />
 <c:set var="yesterday" value="<%= new java.util.Date(System.currentTimeMillis() - 86400000) %>" />
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,10 +69,12 @@
 							<div class="row">
 								<div class="col-md-6 col-lg-5 mb-4 mb-md-0">
 									<div class="p-3">
+										<button class="btn btn-primary mb-2">
+											채팅방 만들기
+										</button>
+										
 										<div class="input-group rounded mb-3">
-											<input type="search" class="form-control rounded" placeholder="이름 입력"
-														 aria-label="Search"
-														 aria-describedby="search-addon" />
+											<input type="search" class="form-control rounded" placeholder="이름 입력" aria-label="Search" aria-describedby="search-addon" />
 											<span class="input-group-text border-0" id="search-addon">
 												<i class="fas fa-search"></i>
 											</span>
@@ -254,8 +255,6 @@
     let chatList = document.querySelector("#chatList");
     let observerBlock = document.querySelector("#observerBlock");
     let scrollHeight = chatList.scrollHeight;
-
-    getChatMessage({chttRoomNo: 1});
 
     let intersectionObserver = new IntersectionObserver(async (entries) => {
       if(entries[0].intersectionRatio > 0) {

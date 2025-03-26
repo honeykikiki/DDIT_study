@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.be.mapper.FilesMapper">
-    <select id="list" parameterType="BoardVO" resultType="fileVO">
+    <select id="list" parameterType="BoardVO" resultType="attachFileVO">
         SELECT *
         FROM FILES
         <where>
@@ -12,16 +12,16 @@
 
     </select>
 
-    <insert id="insertList" parameterType="fileVO">
+    <insert id="insertList" parameterType="attachFileVO">
 <!--        INSERT ALL-->
-<!--        <foreach collection="fileVOList" item="file">-->
+<!--        <foreach collection="attachFileVOList" item="file">-->
 <!--            INTO  FILES (FILE_NAME, CONTENT, BOARD_ID)-->
 <!--            values (#{file.fileName}, #{file.content}, #{file.boardId})-->
 <!--        </foreach>-->
 <!--        SELECT 1 FROM DUAL-->
     </insert>
 
-    <insert id="insert" parameterType="fileVO">
+    <insert id="insert" parameterType="attachFileVO">
         <selectKey resultType="int" order="AFTER" keyProperty="fileId">
             SELECT MAX(FILE_ID) FROM FILES
         </selectKey>

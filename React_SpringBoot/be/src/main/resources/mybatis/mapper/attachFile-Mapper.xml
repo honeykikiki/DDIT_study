@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.be.mapper.AttachFileMapper">
+
+    <select id="getAttachFileNo" resultType="long">
+        SELECT SEQ_ATTATCH_FILE.NEXTVAL FROM DUAL
+    </select>
+
+    <insert id="insertFileList" parameterType="list">
+        INSERT ALL
+            <foreach collection="attachFileVOList" item="file" >
+                INTO ATTATCH_FILE(ATCH_FILE_NO, FILE_SN, FILE_STRE_PATH,
+                                FILE_NM, FILE_STRE_NM, FILE_EXTSN, FILE_SIZE,
+                                DWLD_CO, EMPL_NO, FILE_CREAT_DT,
+                                FILE_VIEW_SIZE, FILE_MIME)
+                VALUES (
+                    #{file.atchFileNo}, #{file.fileSn}, #{file.fileStrePath},
+                    #{file.fileNm}, #{file.fileStreNm}, #{file.fileExtsn}, #{file.fileSize},
+                    0, #{file.emplNo}, SYSDATE, #{file.fileViewSize}, #{file.fileMime}
+                )
+            </foreach>
+        SELECT 1 FROM DUAL
+    </insert>
+
+
+    <select id="getFileAttachList" resultType="kr.or.ddit.be.vo.AttachFileVO">
+        SELECT ATCH_FILE_NO,
+               FILE_SN,
+               FILE_STRE_PATH,
+               FILE_NM,
+               FILE_STRE_NM,
+               FILE_EXTSN,
+               FILE_SIZE,
+               DWLD_CO,
+               EMPL_NO,
+               FILE_DELETE_AT,
+               FILE_CREAT_DT,
+               FILE_VIEW_SIZE,
+               FILE_MIME
+        FROM ATTATCH_FILE
+        WHERE ATCH_FILE_NO = #{atchFileNo}
+
+    </select>
+</mapper>

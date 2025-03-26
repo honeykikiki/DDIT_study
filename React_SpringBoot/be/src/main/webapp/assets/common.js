@@ -1,8 +1,6 @@
 const RECONNECT_INTERVAL = 5000; // 5초 후 재연결 시도
 const TALK = "TALK";
-const JOIN = "JOIN";
 const FILE = "FILE";
-const CHAT = "CHAT";
 let stompClientMap = {}; //
 let isSubscribedMap = {}; // 구독 중인지 확인
 let emp = null; // 이거 바꿔야 함 (진짜 empNo로)
@@ -146,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let chttRoomNo = findOpenChatRoomNo();
 
         submitMessage({
-          messageValue: data.fileVOList[0].fileName,
+          messageValue: data.fileVOList[0].fileStrePath,
           chttRoomNo,
           type: FILE,
           emplNo: emp
@@ -273,7 +271,7 @@ function submitMessage({messageValue, type, chttRoomNo, emplNo}) {
   setTimeout(() => {
     let chatList = document.querySelector("#chatList");
     chatList.scrollTop = chatList.scrollHeight; // 채팅 밑으로 내리기
-  }, 10)
+  }, 100)
 }
 
 /**
@@ -294,7 +292,7 @@ function buildChatMessage(dom, {message}) {
               <p class="small me-4" style="font-size: 0.5rem">${message.emplNm}</p>
               ${ message.type === TALK ? 
                 `<p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary" style="width: fit-content">${message.mssageCn}</p>` 
-                : `<img src="/ys/${message.mssageCn}" class="me-3 mb-1 rounded float-start w-50" alt="...">`}
+                : `<img src="/upload/${message.mssageCn}" class="me-3 mb-1 rounded float-start w-50" alt="...">`}
               <p class="small me-3 mb-3 rounded-3 text-muted" style="font-size: 0.5rem">${formatDate(new Date(message.creatDe))}</p>
           </div>
           <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
@@ -310,7 +308,7 @@ function buildChatMessage(dom, {message}) {
               <p class="ms-4" style="font-size: 0.5rem">${message.emplNm}</p>
               ${ message.type === TALK ?
               `<p class="small p-2 ms-3 mb-1 rounded-3 bg-body-secondary">${message.mssageCn}</p>`
-              : `<img src="/ys/${message.mssageCn}" class="ms-3 mb-1 rounded float-start w-50" alt="...">`}
+              : `<img src="/upload/${message.mssageCn}" class="ms-3 mb-1 rounded float-start w-50" alt="...">`}
               <p class="small ms-3 mb-3 rounded-3 text-muted float-end" style="font-size: 0.5rem">${formatDate(new Date(message.creatDe))}</p>
           </div>
       </div>

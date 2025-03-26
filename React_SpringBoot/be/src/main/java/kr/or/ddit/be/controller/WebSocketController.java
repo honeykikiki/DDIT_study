@@ -50,10 +50,9 @@ public class WebSocketController {
 
         List<AuthorVO.AuthType> authList = emplVO.getAuthList();
 
-        if (!emplVO.validWrite()) {
-            return ResponseEntity.ok("메시지 쓰기 권한이 없습니다.");
-        }
-
+//        if (!emplVO.validWrite()) {
+//            return ResponseEntity.ok("메시지 쓰기 권한이 없습니다.");
+//        }
 
         if (ChatVO.MessageType.JOIN.equals(message.getType())) {
             message.setMssageCn(message.getEmplNm() + "님이 입장하셨습니다.");
@@ -86,14 +85,14 @@ public class WebSocketController {
     public Map<String, Object> sendFile(MultipartFile[] uploadFiles) {
         log.debug("uploadFiles => {}", Arrays.toString(uploadFiles));
         Map<String, Object> resultMap = new HashMap<>();
-        List<FileVO> fileVOList = null;
+        List<AttachFileVO> attachFileVOList = null;
 
         // 파일 업로드
         if (uploadFiles != null && uploadFiles.length > 0) {
-            fileVOList = this.UploadFile.addFile("chat", uploadFiles, 0);
+            attachFileVOList = this.UploadFile.addFiles("chat", uploadFiles, 0);
         }
 
-        resultMap.put("fileVOList", fileVOList);
+        resultMap.put("fileVOList", attachFileVOList);
 
         return resultMap;
     }

@@ -39,7 +39,17 @@ dependencies {
 	implementation 'jakarta.servlet:jakarta.servlet-api' // 스프링부트 3.0 이상
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api' // 스프링부트 3.0 이상
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl' // 스프링부트 3.0 이상
-	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper' //
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper' // 톰켓 jsp 빌드를 위해
+
+	implementation 'org.springframework.boot:spring-boot-starter-mail'// 이메일(추가)
+
+	implementation 'com.google.code.gson:gson:2.10.1' // Gson
+
+	// 최신 Apache POI 관련 라이브러리 추가
+	implementation 'org.apache.poi:poi:5.2.3'
+	implementation 'org.apache.poi:poi-ooxml:5.2.3'
+	implementation 'org.apache.poi:poi-scratchpad:5.2.3'
+	implementation 'commons-io:commons-io:2.11.0'
 }
 
 tasks.named('test') {

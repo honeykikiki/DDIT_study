@@ -3,23 +3,20 @@ package kr.or.ddit.be.service;
 import kr.or.ddit.be.mapper.BoardMapper;
 import kr.or.ddit.be.mapper.FilesMapper;
 import kr.or.ddit.be.util.UploadFile;
+import kr.or.ddit.be.vo.AttachFileVO;
 import kr.or.ddit.be.vo.BoardVO;
-import kr.or.ddit.be.vo.FileVO;
 import kr.or.ddit.be.vo.PaginationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class BoardService {
@@ -49,8 +46,8 @@ public class BoardService {
 
         // 파일 정보 가져오기
         for (BoardVO boardVO : list) {
-            List<FileVO> fileVOList = filesMapper.list(boardVO);
-            boardVO.setFileVOList(fileVOList);
+            List<AttachFileVO> attachFileVOList = filesMapper.list(boardVO);
+            boardVO.setAttachFileVOList(attachFileVOList);
         }
 
         return list;
@@ -66,7 +63,7 @@ public class BoardService {
 
         if (result == 1 && bdFiles != null && bdFiles.length > 0) {
             // 파일 추가하기
-            List<FileVO> fileVOList = this.uploadFile.addFile("board", bdFiles, boardVO.getBoardId());
+            List<AttachFileVO> attachFileVOList = this.uploadFile.addFiles("board", bdFiles, boardVO.getBoardId());
 
 
 //            List<FileVO> fileList = Arrays.stream(bdFiles).map(boardVO1 -> {
@@ -90,7 +87,7 @@ public class BoardService {
 //                return fileVO;
 //            }).toList();
 
-            boardVO.setFileVOList(fileVOList);
+            boardVO.setAttachFileVOList(attachFileVOList);
         }
 
         return result;
@@ -105,15 +102,15 @@ public class BoardService {
         int result = 0;
         BoardVO boardVO = new BoardVO();
         boardVO.setBoardId(boardId);
-        List<FileVO> fileVOList = filesMapper.list(boardVO);
+        List<AttachFileVO> attachFileVOList = filesMapper.list(boardVO);
         List<Integer> fileIdList = new ArrayList<>();
 
-        fileVOList.stream().forEach((fileVO) -> {
+        attachFileVOList.stream().forEach((fileVO) -> {
             // 이미지 먼저 삭제하기
-            Path filePath = Paths.get("/Users/heoseongjin/Documents/GitHub/ddit/ys" + fileVO.getFileName());
+            Path filePath = Paths.get("/Users/heoseongjin/Documents/GitHub/ddit/ys" + fileVO.getFileStrePath());
             try {
                 Files.deleteIfExists(filePath);
-                fileIdList.add(fileVO.getFileId());
+//                fileIdList.add(fileVO.getFileId());
             } catch (IOException e) {
                 System.out.println("파일 삭제 실패: " + e.getMessage());
             }
